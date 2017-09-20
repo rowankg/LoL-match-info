@@ -3,6 +3,7 @@ import requests.exceptions
 
 
 api_token = "RGAPI-fda5cdb6-a2e6-4726-aa04-ebefb203f01e"
+api_base_url = "https://euw1.api.riotgames.com/lol/"
 
 class Summoner:
 
@@ -38,12 +39,37 @@ def createUrl(summonerName):
     url = "https://euw1.api.riotgames.com/lol/summoner/v3/summoners/by-name/" + summonerName + "?api_key=" + api_token
     return url
 
-def get_champion_by_id(account_id):
-    url = "https://euw1.api.riotgames.com/lol/match/v3/matchlists/by-account/" + str(account_id) + "/recent?api_key=" + api_token
+def createUrl2 (*args):
+    url = api_base_url
+    for arg in args:
+        url = url + str(arg)
+    url = url + "?api_key=" + api_token
+    return url
+
+def createUrl3(api_path, *input_params):
+    """
+    This function is used to create a url by doing the following:
+    1. Create url containing base url and the path to specific api
+    2. Add each input argument to url
+    3. Add api key to url
+    The created url is then returned
+    """
+    url = api_base_url + api_path
+    for input_param in input_params:
+        url = url + str(input_param) + "&"
+
+    # Remove last & from url
+    url = url[:-1]
+
+    url = url + "?api_key=" + api_token
+    return url
+
+def get_champion_by_id(champion_id):
+    url = createUrl3("static-data/v3/champions/", champion_id)
     r = requests.get(url)
-    # print(r.json())
-    match = r.json()['matches'][0]
-    champion_id = match['champion']
+    champion_info = r.json()
+    champion_id = champion_info['name']
+    return champion_id
 
 
 def get_current_match(summoner_id):
@@ -56,6 +82,9 @@ def get_current_match(summoner_id):
         participant_id = participant['summonerId']
         champion_id = participant['championId']
         team = participant['teamId']
+
+        champion_name = get_champion_by_id(champion_id)
+
         summoner = Summoner()
         summoner.set
 
@@ -69,9 +98,12 @@ def get_champion_data(championId):
 
 
 def main():
-    summoner_id = get_summoner_id("KOONEIN")
+    createUrl2("platform/v3/champions/", 90)
+    createUrl3("platform/v3/champions/", 90)
+
+    summoner_id = get_summoner_id("ItzRowan")
     print(summoner_id)
-    account_id = get_account_id("KOONEIN")
+    account_id = get_account_id("ItzRowan")
     print(account_id)
     get_current_match(summoner_id)
 
