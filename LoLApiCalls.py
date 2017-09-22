@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-""" This module can be used to execute json requests to every available LoL API"""
+""" This module can be used to execute json requests to every available LoL API """
 
 import requests
 
