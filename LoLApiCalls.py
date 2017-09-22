@@ -1,5 +1,4 @@
 import requests
-import requests.exceptions
 
 api_token = "RGAPI-67a5a623-246a-4616-b27d-53874a806e4a"
 api_base_url = "https://{}.api.riotgames.com/lol"
